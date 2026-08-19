@@ -15,7 +15,11 @@ public class ReservationService {
     private final Map<Long, Reservation> reservationMap;
     private final AtomicLong idCounter;
 
-    public ReservationService() {
+
+    private final ReservationRepository repository;
+
+    public ReservationService(ReservationRepository repository) {
+        this.repository = repository;
         reservationMap = new HashMap<>();
         idCounter = new AtomicLong();
     }
@@ -30,7 +34,19 @@ public class ReservationService {
     }
 
     public List<Reservation> findAllReservation() {
-        return reservationMap.values().stream().toList();
+        List<ReservationEntity> allEntities = repository.findAll();
+
+        return allEntities.stream()
+                .map(it ->
+                        new Reservation(
+                                it.getId(),
+                                it.getUserId(),
+                                it.getRoomId(),
+                                it.getStartDate(),
+                                it.getEndDate(),
+                                it.getStatus()
+                        )
+                ).toList();
     }
 
     public Reservation createReservation(Reservation reservationToCreate) {
