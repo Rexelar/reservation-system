@@ -13,6 +13,18 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
 
     List<ReservationEntity> findAllByStatusIs(ReservationStatus status);
 
+    @Modifying
+    @Query("""
+        update ReservationEntity r
+        set
+            r.status = :status
+        where r.id = :id
+        """)
+
+    void setStatus(
+            @Param("id") Long id,
+            @Param("status") ReservationStatus reservationStatus
+    );
 //    @Query("select r from ReservationEntity r where r.s")   // Вариант с использованием JPQL
 //    List<ReservationEntity> findAllByStatusIs(ReservationStatus status);
 
@@ -46,16 +58,4 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
 //            @Param("status") ReservationStatus status
 //    );
 
-    @Modifying
-    @Query("""
-        update ReservationEntity r
-        set
-            r.status = :status
-        where r.id = :id
-        """)
-
-    void setStatus(
-            @Param("id") Long id,
-            @Param("status") ReservationStatus reservationStatus
-    );
 }
