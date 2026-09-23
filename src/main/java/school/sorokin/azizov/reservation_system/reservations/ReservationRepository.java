@@ -1,6 +1,5 @@
-package school.sorokin.azizov.reservation_system;
+package school.sorokin.azizov.reservation_system.reservations;
 
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +24,21 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
             @Param("id") Long id,
             @Param("status") ReservationStatus reservationStatus
     );
+
+    @Query("""
+            SELECT r.id from ReservationEntity r
+            WHERE r.roomId = :roomId
+            AND :startDate < r.endDate
+            AND r.startDate < :endDate
+            AND r.status = :status
+            """)
+    List<Long> findConflictReservationsIds(
+            @Param("roomId") Long roomId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("status") ReservationStatus status
+    );
+
 //    @Query("select r from ReservationEntity r where r.s")   // Вариант с использованием JPQL
 //    List<ReservationEntity> findAllByStatusIs(ReservationStatus status);
 

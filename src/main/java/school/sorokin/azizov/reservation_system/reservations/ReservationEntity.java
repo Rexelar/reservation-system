@@ -1,4 +1,4 @@
-package school.sorokin.azizov.reservation_system;
+package school.sorokin.azizov.reservation_system.reservations;
 
 
 import jakarta.persistence.*;
